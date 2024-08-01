@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fox API</title>
+    <script src="https://unpkg.com/vue@3.2.30"></script>
+    <script src="https://unpkg.com/axios@0.23.0/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <fox-image></fox-image>
+    </div>
+
+    <script>
+        const app = Vue.createApp({});
+
+        app.component('fox-image',{
+            data() {
+                return {
+                    foxImage: '',
+                };
+            },
+            methods: {
+                getRandomFoxImage() {
+                    axios.get('http://153.120.121.157:30149/fox')
+                        .then((response) => {
+                            this.foxImage = response.data[0].url;
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                }
+            },
+            mounted() {
+                // アプリがマウントされたときに初期画像を取得
+                this.getRandomFoxImage();
+            },
+            template: `
+                <div>
+                    <h1>Random Fox Image</h1>
+                    <img :src="foxImage" alt="Random Fox">
+                    <button @click="getRandomFoxImage">Get New Fox</button>
+                </div>
+            `,      
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
